@@ -3,7 +3,10 @@ using DietPlanner.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,11 +18,13 @@ namespace DietPlanner.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IConfiguration _configuration;
 
-        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -54,6 +59,36 @@ namespace DietPlanner.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login(AppUserLoginViewModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                var tokenDescription = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim("UserID", user.Id.ToString())
+                    }),
+                    Expires = DateTime.UtcNow.AddMinutes(5),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ApplicationSettings:JWT_Secret")), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.CreateToken(tokenDescription);
+                var token = tokenHandler.WriteToken(securityToken);
+
+                return Ok(new { token });
+            }
+            else
+            {
+                return BadRequest(new { message = "Username or password is incorrect" });
             }
         }
     }
