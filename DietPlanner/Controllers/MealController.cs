@@ -19,7 +19,7 @@ namespace DietPlanner.Controllers
                 var mealUrl = @$"https://api.spoonacular.com/mealplanner/generate?apiKey={apiKey}&timeFrame=day&targetCalories={targetCalories}";
                
                 var mealContent = await client.GetStringAsync(mealUrl);
-                var result = JsonConvert.DeserializeObject<DailyMealGetViewModel>(mealContent);
+                var result = JsonConvert.DeserializeObject<DailyMeal>(mealContent);
 
                 foreach (var item in result.Meals)
                 {
