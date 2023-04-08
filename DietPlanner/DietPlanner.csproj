@@ -14,4 +14,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DietPlanner.DAL\DietPlanner.DAL.csproj" />
+  </ItemGroup>
+
 </Project>
