@@ -1,8 +1,9 @@
-﻿namespace DietPlanner.DAL.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class AppUser
+namespace DietPlanner.DAL.Entities;
+
+public class AppUser : IdentityUser
 {
     public string SpoonacularUserName { get; set; }
-    public string SpoonacularPassword { get; set; }
     public string Hash { get; set; }
 }
