@@ -12,7 +12,6 @@ builder.Services.AddDbContext<DietPlannerContext>(
     options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
 
 builder.Services.InstallRepositories();
-builder.Services.AddHttpClient();
 
 builder.Services.AddAuthentication();
 builder.Services.AddIdentityCore<AppUser>()

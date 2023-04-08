@@ -35,14 +35,14 @@ namespace DietPlanner.Controllers
             var response = await client.PostAsync(url, data);
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var connectionResult = JsonConvert.DeserializeObject<ConnectUserResponse>(responseContent);
+            var responseResult = JsonConvert.DeserializeObject<ConnectUserResponse>(responseContent);
 
             var appUser = new AppUser()
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                SpoonacularUserName = connectionResult.Username,
-                Hash = connectionResult.Hash
+                SpoonacularUserName = responseResult.Username,
+                Hash = responseResult.Hash
             };
 
             try

@@ -1,15 +1,6 @@
-﻿using DietPlanner.DAL.Entities;
-using DietPlanner.Models;
-using DietPlanner.Models.Meal;
-using Microsoft.AspNetCore.Identity;
+﻿using DietPlanner.Models.Meal;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-
-
 
 namespace DietPlanner.Controllers
 {
@@ -17,53 +8,33 @@ namespace DietPlanner.Controllers
     [ApiController]
     public class MealController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<MealController> _logger;
-
-        public MealController(IHttpClientFactory httpClientFactory, ILogger<MealController> logger)
-        {
-            _httpClientFactory = httpClientFactory;
-            _logger = logger;
-        }
-
         [HttpGet]
-        [Route("Generate")]
-        public async Task<IActionResult> Generate(double calories)
+        [Route("GenerateMealPlan")]
+        public async Task<IActionResult> GenerateMealPlan(double targetCalories)
         {
             try
             {
                 using var client = new HttpClient();
-                //var client = _httpClientFactory.CreateClient();
-                var apiKey = "9d626a8dc74647f99e0d9833af770c8f"; // Replace with your actual API key
-                var url = @$"https://api.spoonacular.com/mealplanner/generate?apiKey={apiKey}&timeFrame=day&targetCalories={calories}"; // Add any other required parameters as per the API documentation
-                var content = await client.GetStringAsync(url);
+                var apiKey = "031d6e7cded746119c46900569a5fb0d";
+                var mealUrl = @$"https://api.spoonacular.com/mealplanner/generate?apiKey={apiKey}&timeFrame=day&targetCalories={targetCalories}";
+               
+                var mealContent = await client.GetStringAsync(mealUrl);
+                var result = JsonConvert.DeserializeObject<DailyMealGetViewModel>(mealContent);
 
-                var response = await client.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
+                foreach (var item in result.Meals)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
+                    var recipeUrl = $@"https://api.spoonacular.com/recipes/{item.Id}/information?includeNutrition=true&apiKey={apiKey}";
+                    var recipeContent = await client.GetStringAsync(recipeUrl);
+                    var recipeFullInfo = JsonConvert.DeserializeObject<RecipeGetViewModel>(recipeContent);
 
-
-                    DailyMealGetViewModel result = JsonConvert.DeserializeObject<DailyMealGetViewModel>(json);
-
-                    var a = result.Recepies[0].Calories;
-
-                    var resultOld = JsonConvert.DeserializeObject(json);
-
-                    return Ok(a);
+                    item.ImageUrl = recipeFullInfo.Image;
                 }
-                else
-                {
-                    var errorResponse = await response.Content.ReadAsStringAsync();
-                    _logger.LogError($"Failed to fetch data from API. Status code: {response.StatusCode}. Error response: {errorResponse}");
-                    return StatusCode((int)response.StatusCode, "Failed to fetch data from API.");
-                }
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error: {ex.Message}");
-                return StatusCode(500, "Internal server error.");
+                throw ex;
             }
         }
     }
