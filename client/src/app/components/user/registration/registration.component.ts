@@ -12,14 +12,14 @@ import { UserService } from 'src/app/shared/user.service';
 export class RegistrationComponent implements OnInit {
 
   public formModel = this._fb.group({
-    UserName: ['', Validators.required],
-    Email: ['', Validators.email],
-    Passwords: this._fb.group({
-      Password: ['', [Validators.required, Validators.minLength(4)]],
-      ConfirmPassword: ['', Validators.required]
+    userName: ['', Validators.required],
+    email: ['', Validators.email],
+    passwords: this._fb.group({
+      password: ['', [Validators.required, Validators.minLength(4)]],
+      confirmPassword: ['', Validators.required]
     },{validators: this.comparePasswords}),
-    FirstName: ['', Validators.required],
-    LastName: ['', Validators.required]
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required]
   });
 
   constructor(private _fb:FormBuilder, public service: UserService, private toastr:ToastrService, private router:Router) { }
@@ -43,11 +43,11 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit() {
     var body = {
-      UserName: this.formModel.value.UserName,
-      Email: this.formModel.value.Email,
-      Password: this.formModel.value.Passwords.Password,
-      FirstName: this.formModel.value.FirstName,
-      LastName: this.formModel.value.LastName
+      userName: this.formModel.value.userName,
+      email: this.formModel.value.email,
+      password: this.formModel.value.passwords.password,
+      firstName: this.formModel.value.firstName,
+      lastName: this.formModel.value.lastName
     };
 
     this.service.register(body).subscribe(

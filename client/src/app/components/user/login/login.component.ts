@@ -12,8 +12,8 @@ import { UserService } from 'src/app/shared/user.service';
 export class LoginComponent implements OnInit {
 
   formModel = this._fb.group({
-    UserName: ['', Validators.required],
-    Password: ['', Validators.required]
+    userName: ['', Validators.required],
+    password: ['', Validators.required]
   })
 
   constructor(private _fb:FormBuilder, private service:UserService, private router: Router, private toastr: ToastrService) { }
@@ -26,8 +26,8 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     var body = {
-      UserName: this.formModel.value.UserName,
-      Password: this.formModel.value.Password
+      userName: this.formModel.value.userName,
+      password: this.formModel.value.password
     };
 
     this.service.login(body).subscribe(

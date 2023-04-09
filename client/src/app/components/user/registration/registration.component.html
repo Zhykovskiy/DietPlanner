@@ -1,40 +1,40 @@
 <form [formGroup]="formModel" (submit)="onSubmit()">
     <div class="form-group">
         <label for="userName">UserName</label>
-        <input id="userName" class="form-control" formControlName="UserName"/>
-        <div class="text-danger" *ngIf="formModel.get('UserName')?.touched && formModel.get('UserName')?.errors?.['required']">This field is mandatory.</div>
+        <input id="userName" class="form-control" formControlName="userName"/>
+        <div class="text-danger" *ngIf="formModel.get('userName')?.touched && formModel.get('userName')?.errors?.['required']">This field is mandatory.</div>
     </div>
 
     <div class="form-group">
         <label for="firstName">FirstName</label>
-        <input id="firstName" class="form-control" formControlName="FirstName"/>
-        <div class="text-danger" *ngIf="formModel.get('FirstName')?.touched && formModel.get('FirstName')?.errors?.['required']">This field is mandatory.</div>
+        <input id="firstName" class="form-control" formControlName="firstName"/>
+        <div class="text-danger" *ngIf="formModel.get('firstName')?.touched && formModel.get('firstName')?.errors?.['required']">This field is mandatory.</div>
     </div>
 
     <div class="form-group">
         <label for="lastName">LastName</label>
-        <input id="lastName" class="form-control" formControlName="LastName"/>
-        <div class="text-danger" *ngIf="formModel.get('LastName')?.touched && formModel.get('LastName')?.errors?.['required']">This field is mandatory.</div>
+        <input id="lastName" class="form-control" formControlName="lastName"/>
+        <div class="text-danger" *ngIf="formModel.get('lastName')?.touched && formModel.get('lastName')?.errors?.['required']">This field is mandatory.</div>
     </div>
 
     <div class="form-group">
         <label for="emailAddress">Email</label>
-        <input id="emailAddress" class="form-control" formControlName="Email" />
-        <div class="text-danger" *ngIf="formModel.get('Email')?.touched && formModel.get('Email')?.errors?.['email']">Invalid email address.</div>
+        <input id="emailAddress" class="form-control" formControlName="email" />
+        <div class="text-danger" *ngIf="formModel.get('email')?.touched && formModel.get('email')?.errors?.['email']">Invalid email address.</div>
     </div>
-    <div formGroupName="Passwords">
+    <div formGroupName="passwords">
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" class="form-control" formControlName="Password" />
-            <div class="text-danger" *ngIf="formModel.get('Passwords.Password')?.touched && formModel.get('Passwords.Password')?.errors?.['required']">This field is mandatory.</div>
-            <div class="text-danger" *ngIf="formModel.get('Passwords.Password')?.touched && formModel.get('Passwords.Password')?.errors?.['minlength']">Minimum 4 characters required.</div>
+            <input type="password" id="password" class="form-control" formControlName="password" />
+            <div class="text-danger" *ngIf="formModel.get('passwords.password')?.touched && formModel.get('passwords.password')?.errors?.['required']">This field is mandatory.</div>
+            <div class="text-danger" *ngIf="formModel.get('passwords.password')?.touched && formModel.get('passwords.password')?.errors?.['minlength']">Minimum 4 characters required.</div>
         </div>
 
         <div class="form-group">
             <label for="confirmPassword">Confirm password</label>
-            <input type="password" id="confirmPassword" class="form-control" formControlName="ConfirmPassword" />
-            <div class="text-danger" *ngIf="formModel.get('Passwords.ConfirmPassword')?.touched && formModel.get('Passwords.ConfirmPassword')?.errors?.['required']">This field is mandatory.</div>
-            <div class="text-danger" *ngIf="formModel.get('Passwords.ConfirmPassword')?.touched && formModel.get('Passwords.ConfirmPassword')?.errors?.['passwordMismatch']">Confirm Password does not match..</div>
+            <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" />
+            <div class="text-danger" *ngIf="formModel.get('passwords.confirmPassword')?.touched && formModel.get('passwords.ConfirmPassword')?.errors?.['required']">This field is mandatory.</div>
+            <div class="text-danger" *ngIf="formModel.get('passwords.confirmPassword')?.touched && formModel.get('passwords.ConfirmPassword')?.errors?.['passwordMismatch']">Confirm Password does not match..</div>
         </div>
     </div>
     <div class="form-row">
