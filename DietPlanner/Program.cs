@@ -7,13 +7,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DietPlanner.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add secrets configuration
+builder.Configuration.AddUserSecrets<Program>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Configure DbContext with the retrieved connection string
+
 
 builder.Services.AddDbContext<DietPlannerContext>(
-    options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+    options => options.UseSqlServer(connectionString));
+
+builder.Services.InstallMappers();
 
 builder.Services.AddAuthentication();
 builder.Services.AddIdentityCore<AppUser>()
