@@ -62,7 +62,7 @@ namespace DietPlanner.Controllers
         {
             var request = model.Select(item => _mapper.Map<AddToMealPlanRequest>(item)).ToList();
 
-            var json = JsonConvert.SerializeObject(requset);
+            var json = JsonConvert.SerializeObject(request);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
             var currentUser = await _userManager.GetUserAsync(User);
