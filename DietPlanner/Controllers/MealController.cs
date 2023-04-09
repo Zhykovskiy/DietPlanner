@@ -60,12 +60,7 @@ namespace DietPlanner.Controllers
         [Route("AddMealToPlan")]
         public async Task<IActionResult> AddMealToPlan(List<AddMealToPlanViewModel> model)
         {
-            var requset = new List<AddToMealPlanRequest>();
-            foreach (var item in model)
-            {
-                var itemAfterMapping = _mapper.Map<AddToMealPlanRequest>(item);
-                requset.Add(itemAfterMapping);
-            }
+            var request = model.Select(item => _mapper.Map<AddToMealPlanRequest>(item)).ToList();
 
             var json = JsonConvert.SerializeObject(requset);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
