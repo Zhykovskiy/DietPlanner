@@ -21,10 +21,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DietPlannerContext>(
     options => options.UseSqlServer(connectionString));
 
-builder.Services.InstallRepositories();
 builder.Services.InstallMappers();
-
-
 
 builder.Services.AddAuthentication();
 builder.Services.AddIdentityCore<AppUser>()
