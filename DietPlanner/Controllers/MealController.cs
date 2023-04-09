@@ -13,10 +13,14 @@ namespace DietPlanner.Controllers
     public class MealController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IConfiguration _configuration;
+        private readonly string _apiKey;
 
-        public MealController(UserManager<AppUser> userManager)
+        public MealController(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
+            _apiKey = _configuration["apiKey"];
         }
 
         [HttpGet]
@@ -26,15 +30,15 @@ namespace DietPlanner.Controllers
             try
             {
                 using var client = new HttpClient();
-                var apiKey = "031d6e7cded746119c46900569a5fb0d";
-                var mealUrl = @$"https://api.spoonacular.com/mealplanner/generate?apiKey={apiKey}&timeFrame=day&targetCalories={targetCalories}";
+                
+                var mealUrl = @$"https://api.spoonacular.com/mealplanner/generate?apiKey={_apiKey}&timeFrame=day&targetCalories={targetCalories}";
                
                 var mealContent = await client.GetStringAsync(mealUrl);
                 var result = JsonConvert.DeserializeObject<DailyMeal>(mealContent);
 
                 foreach (var item in result.Meals)
                 {
-                    var recipeUrl = $@"https://api.spoonacular.com/recipes/{item.Id}/information?includeNutrition=true&apiKey={apiKey}";
+                    var recipeUrl = $@"https://api.spoonacular.com/recipes/{item.Id}/information?includeNutrition=true&apiKey={_apiKey}";
                     var recipeContent = await client.GetStringAsync(recipeUrl);
                     var recipeFullInfo = JsonConvert.DeserializeObject<RecipeGetViewModel>(recipeContent);
 
@@ -70,9 +74,8 @@ namespace DietPlanner.Controllers
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
             var currentUser = await _userManager.GetUserAsync(User);
-            var apiKey = "031d6e7cded746119c46900569a5fb0d";
 
-            var url = $@"https://api.spoonacular.com/mealplanner/{currentUser.SpoonacularUserName}/items?hash={currentUser.Hash}&apiKey={apiKey}";
+            var url = $@"https://api.spoonacular.com/mealplanner/{currentUser.SpoonacularUserName}/items?hash={currentUser.Hash}&apiKey={_apiKey}";
             using var client = new HttpClient();
 
             var response = await client.PostAsync(url, data);

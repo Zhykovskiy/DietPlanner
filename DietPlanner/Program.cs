@@ -10,12 +10,19 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add secrets configuration
+builder.Configuration.AddUserSecrets<Program>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Configure DbContext with the retrieved connection string
+
 
 builder.Services.AddDbContext<DietPlannerContext>(
-    options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+    options => options.UseSqlServer(connectionString));
 
 builder.Services.InstallRepositories();
+
+
 
 builder.Services.AddAuthentication();
 builder.Services.AddIdentityCore<AppUser>()
