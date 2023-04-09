@@ -37,7 +37,7 @@ export class RegistrationComponent implements OnInit {
       } 
       else {
         confirmPasswordCtrl?.setErrors(null);
-      }
+  }
     }
   }
 
