@@ -7,15 +7,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DietPlanner.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add secrets configuration
+builder.Configuration.AddUserSecrets<Program>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Configure DbContext with the retrieved connection string
+
 
 builder.Services.AddDbContext<DietPlannerContext>(
-    options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+    options => options.UseSqlServer(connectionString));
 
-builder.Services.InstallRepositories();
+builder.Services.InstallMappers();
 
 builder.Services.AddAuthentication();
 builder.Services.AddIdentityCore<AppUser>()
@@ -43,7 +49,7 @@ builder.Services.AddAuthentication(x =>
 {
     x.RequireHttpsMetadata = false;
     x.SaveToken = false;
-    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -55,12 +61,12 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
+builder.Services.AddCors();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -71,7 +77,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(builder => builder.WithOrigins("http//localhost:4200").AllowAnyHeader().AllowAnyMethod());
+app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
 
 app.UseHttpsRedirection();
 

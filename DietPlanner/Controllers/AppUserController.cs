@@ -17,11 +17,13 @@ namespace DietPlanner.Controllers
     public class AppUserController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AppUserController(UserManager<AppUser> userManager, IConfiguration configuration)
+        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _configuration = configuration;
         }
 
@@ -32,7 +34,8 @@ namespace DietPlanner.Controllers
             var json = JsonConvert.SerializeObject(user);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = "https://api.spoonacular.com/users/connect?apiKey=031d6e7cded746119c46900569a5fb0d";
+            var apiKey = _configuration["apiKey"];
+            var url = @$"https://api.spoonacular.com/users/connect?apiKey={apiKey}";
             using var client = new HttpClient();
 
             var response = await client.PostAsync(url, data);
@@ -75,7 +78,7 @@ namespace DietPlanner.Controllers
                         new Claim("UserID", user.Id.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(5),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ApplicationSettings:JWT_Secret"])), SecurityAlgorithms.HmacSha256Signature)
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ApplicationSettings:JWT_Secret")), SecurityAlgorithms.HmacSha256Signature)
                 };
 
                 var tokenHandler = new JwtSecurityTokenHandler();

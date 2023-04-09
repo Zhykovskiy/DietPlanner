@@ -1,1 +1,45 @@
-<p>registration works!</p>
+<form [formGroup]="formModel" (submit)="onSubmit()">
+    <div class="form-group">
+        <label for="userName">UserName</label>
+        <input id="userName" class="form-control" formControlName="UserName"/>
+        <div class="text-danger" *ngIf="formModel.get('UserName')?.touched && formModel.get('UserName')?.errors?.['required']">This field is mandatory.</div>
+    </div>
+
+    <div class="form-group">
+        <label for="firstName">FirstName</label>
+        <input id="firstName" class="form-control" formControlName="FirstName"/>
+        <div class="text-danger" *ngIf="formModel.get('FirstName')?.touched && formModel.get('FirstName')?.errors?.['required']">This field is mandatory.</div>
+    </div>
+
+    <div class="form-group">
+        <label for="lastName">LastName</label>
+        <input id="lastName" class="form-control" formControlName="LastName"/>
+        <div class="text-danger" *ngIf="formModel.get('LastName')?.touched && formModel.get('LastName')?.errors?.['required']">This field is mandatory.</div>
+    </div>
+
+    <div class="form-group">
+        <label for="emailAddress">Email</label>
+        <input id="emailAddress" class="form-control" formControlName="Email" />
+        <div class="text-danger" *ngIf="formModel.get('Email')?.touched && formModel.get('Email')?.errors?.['email']">Invalid email address.</div>
+    </div>
+    <div formGroupName="Passwords">
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control" formControlName="Password" />
+            <div class="text-danger" *ngIf="formModel.get('Passwords.Password')?.touched && formModel.get('Passwords.Password')?.errors?.['required']">This field is mandatory.</div>
+            <div class="text-danger" *ngIf="formModel.get('Passwords.Password')?.touched && formModel.get('Passwords.Password')?.errors?.['minlength']">Minimum 4 characters required.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm password</label>
+            <input type="password" id="confirmPassword" class="form-control" formControlName="ConfirmPassword" />
+            <div class="text-danger" *ngIf="formModel.get('Passwords.ConfirmPassword')?.touched && formModel.get('Passwords.ConfirmPassword')?.errors?.['required']">This field is mandatory.</div>
+            <div class="text-danger" *ngIf="formModel.get('Passwords.ConfirmPassword')?.touched && formModel.get('Passwords.ConfirmPassword')?.errors?.['passwordMismatch']">Confirm Password does not match..</div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group d-flex justify-content-center">
+            <button class="btn btn-lg border-0" type="submit" [disabled]="!formModel.valid">Sign Up</button>
+        </div>
+    </div>
+</form>
