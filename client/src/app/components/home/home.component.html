@@ -2,3 +2,27 @@
     <a class="navbar-brand text-white ms-4">Diet Planner</a>
     <button class="btn btn-danger me-4 my-sm-0" (click)="onLogout()">Logout</button>
 </nav>
+
+<div class="form-floating mt-4 ms-4">
+    <input type="text" class="form-control" id="calories" [(ngModel)]="calories">
+    <label for="calories">Calories</label>
+    <button type="button" class="btn btn-success mt-2" (click)="generateMealPlan()">Generate Meal Plan</button>
+</div>
+
+<div class="container mt-4" *ngIf="showMealPlan">
+    <div class="card bg-white mb-4 w-50">
+        <div class="card-body">
+            Calories: {{mealPlan.nutrients.calories}} Carbohydrates: {{mealPlan.nutrients.carbohydrates}} Fat: {{mealPlan.nutrients.fat}} Protein: {{mealPlan.nutrients.protein}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="card col-sm me-4" style="width: 18rem;" *ngFor="let meal of mealPlan.meals">
+            <img class="card-img-top" src="{{meal.imageUrl}}" alt="Card image cap">
+            <div class="card-body">
+                <h6 class="card-title">{{meal.title}}</h6>
+                <a href="{{meal.sourceUrl}}" class="btn btn-primary">Learn more</a>
+            </div>
+        </div>
+    </div>
+</div>
+
