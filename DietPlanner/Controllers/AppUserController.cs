@@ -19,18 +19,21 @@ namespace DietPlanner.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<MealController> _logger;
 
-        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration)
+        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, ILogger<MealController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> CreateAppUser(AppUserCreateViewModel user)
         {
+            _logger.LogError("HELLO CreateAppUser");
             var json = JsonConvert.SerializeObject(user);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -55,6 +58,7 @@ namespace DietPlanner.Controllers
             {
                 var result = await _userManager.CreateAsync(appUser, user.Password);
 
+                _logger.LogError("END CreateAppUser");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -67,6 +71,7 @@ namespace DietPlanner.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login(AppUserLoginViewModel model)
         {
+            _logger.LogError("HELLO Login");
             var user = await _userManager.FindByNameAsync(model.UserName);
 
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
@@ -85,6 +90,7 @@ namespace DietPlanner.Controllers
                 var securityToken = tokenHandler.CreateToken(tokenDescription);
                 var token = tokenHandler.WriteToken(securityToken);
 
+                _logger.LogError("END Login");
                 return Ok(new { token });
             }
             else

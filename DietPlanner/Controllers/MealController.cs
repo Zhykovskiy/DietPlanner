@@ -16,13 +16,15 @@ namespace DietPlanner.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly ILogger<MealController> _logger;
         private readonly string _apiKey;
 
-        public MealController(UserManager<AppUser> userManager, IConfiguration configuration, IMapper mapper)
+        public MealController(UserManager<AppUser> userManager, IConfiguration configuration, IMapper mapper, ILogger<MealController> logger)
         {
             _userManager = userManager;
             _configuration = configuration;
             _mapper = mapper;
+            _logger = logger;
             _apiKey = _configuration["apiKey"];
         }
 
@@ -30,6 +32,7 @@ namespace DietPlanner.Controllers
         [Route("GenerateMealPlan")]
         public async Task<IActionResult> GenerateMealPlan(double targetCalories)
         {
+            _logger.LogError("HELLO GenerateMealPlan");
             try
             {
                 using var client = new HttpClient();
@@ -47,7 +50,7 @@ namespace DietPlanner.Controllers
 
                     item.ImageUrl = recipeFullInfo.Image;
                 }
-
+                _logger.LogError("End GenerateMealPlan");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -60,6 +63,7 @@ namespace DietPlanner.Controllers
         [Route("AddMealToPlan")]
         public async Task<IActionResult> AddMealToPlan(List<AddMealToPlanViewModel> model)
         {
+            _logger.LogError("HELLO AddMealToPlan");
             var request = model.Select(item => _mapper.Map<AddToMealPlanRequest>(item)).ToList();
 
             var json = JsonConvert.SerializeObject(request);
@@ -71,7 +75,7 @@ namespace DietPlanner.Controllers
             using var client = new HttpClient();
 
             var response = await client.PostAsync(url, data);
-
+            _logger.LogError("End AddMealToPlan");
             return Ok(response);
         }
     }

@@ -15,6 +15,7 @@ export class MealService {
   }
 
   addMealToPlan(body: any[]) {
+    console.log(this.baseUrl + '/Meal/AddMealToPlan');
     return this._http.post(this.baseUrl + '/Meal/AddMealToPlan', body);
   }
 }
