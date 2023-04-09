@@ -34,7 +34,8 @@ namespace DietPlanner.Controllers
             var json = JsonConvert.SerializeObject(user);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = "https://api.spoonacular.com/users/connect?apiKey=031d6e7cded746119c46900569a5fb0d";
+            var apiKey = _configuration["apiKey"];
+            var url = @$"https://api.spoonacular.com/users/connect?apiKey={apiKey}";
             using var client = new HttpClient();
 
             var response = await client.PostAsync(url, data);
