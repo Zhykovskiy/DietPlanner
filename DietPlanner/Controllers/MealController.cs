@@ -63,17 +63,8 @@ namespace DietPlanner.Controllers
             var requset = new List<AddToMealPlanRequest>();
             foreach (var item in model)
             {
-                //var itemAfterMapping = _mapper.Map<AddToMealPlanRequest>(item);
-                //requset.Add(itemAfterMapping);
-
-                requset.Add(new AddToMealPlanRequest
-                {
-                    Date = (int)item.Date.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
-                    Slot = item.Slot,
-                    Position = item.Position,
-                    Type = item.Type,
-                    Value = item.Value
-                });
+                var itemAfterMapping = _mapper.Map<AddToMealPlanRequest>(item);
+                requset.Add(itemAfterMapping);
             }
 
             var json = JsonConvert.SerializeObject(requset);
