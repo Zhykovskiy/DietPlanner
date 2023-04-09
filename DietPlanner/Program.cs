@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DietPlanner.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<DietPlannerContext>(
     options => options.UseSqlServer(connectionString));
 
 builder.Services.InstallRepositories();
+builder.Services.InstallMappers();
 
 
 

@@ -1,4 +1,5 @@
-﻿using DietPlanner.DAL.Entities;
+﻿using AutoMapper;
+using DietPlanner.DAL.Entities;
 using DietPlanner.Models.Meal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,12 +15,14 @@ namespace DietPlanner.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
         private readonly string _apiKey;
 
-        public MealController(UserManager<AppUser> userManager, IConfiguration configuration)
+        public MealController(UserManager<AppUser> userManager, IConfiguration configuration, IMapper mapper)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _mapper = mapper;
             _apiKey = _configuration["apiKey"];
         }
 
@@ -60,6 +63,9 @@ namespace DietPlanner.Controllers
             var requset = new List<AddToMealPlanRequest>();
             foreach (var item in model)
             {
+                //var itemAfterMapping = _mapper.Map<AddToMealPlanRequest>(item);
+                //requset.Add(itemAfterMapping);
+
                 requset.Add(new AddToMealPlanRequest
                 {
                     Date = (int)item.Date.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
