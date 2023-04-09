@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   mealSubject = new Subject<any>();
   mealPlan: any;
   showMealPlan = false;
+  date: Date | undefined;
 
   constructor(private router:Router, private _mealService: MealService) { }
 
@@ -41,6 +42,28 @@ export class HomeComponent implements OnInit {
         console.log(error);
       }
     )
+  }
+
+  addMealToPlan() {
+    var body: any[] = []
+
+    this.mealPlan.meals.forEach((meal: any, i: number) => {
+      body[i] = {
+        date: this.date,
+        slot: i+1,
+        position: 0,
+        type: "RECIPE",
+        value: {
+          id: meal.id,
+          servings: 1,
+          title: meal.title,
+          imageType: "jpg"
+        }
+      }
+    });
+
+    this._mealService.addMealToPlan(body);
+    console.log(body);
   }
 
 }

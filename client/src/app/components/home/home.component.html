@@ -10,17 +10,28 @@
 </div>
 
 <div class="container mt-4" *ngIf="showMealPlan">
-    <div class="card bg-white mb-4 w-50">
-        <div class="card-body">
-            Calories: {{mealPlan.nutrients.calories}} Carbohydrates: {{mealPlan.nutrients.carbohydrates}} Fat: {{mealPlan.nutrients.fat}} Protein: {{mealPlan.nutrients.protein}}
+    <div class="row">
+        <div class="card bg-white mb-4 w-50 me-2">
+            <div class="card-body">
+                Calories: {{mealPlan.nutrients.calories}} Carbohydrates: {{mealPlan.nutrients.carbohydrates}} Fat: {{mealPlan.nutrients.fat}} Protein: {{mealPlan.nutrients.protein}}
+            </div>
+        </div>
+        <div class="card bg-white mb-4 w-25">
+            <div class="card-body d-flex align-items-center">
+                <label for="date" class="me-2">Select date:</label>
+                <input type="date" id="date" class="form-control" style="width: 55%;" [(ngModel)]="date">
+            </div>
+        </div>
+        <div class="col-sm-1 d-flex align-items-center justify-content-center mb-4">
+            <button type="button" class="btn btn-primary" (click)="addMealToPlan()">Add meal to calendar</button>
         </div>
     </div>
     <div class="row">
         <div class="card col-sm me-4" style="width: 18rem;" *ngFor="let meal of mealPlan.meals">
             <img class="card-img-top" src="{{meal.imageUrl}}" alt="Card image cap">
-            <div class="card-body">
-                <h6 class="card-title">{{meal.title}}</h6>
-                <a href="{{meal.sourceUrl}}" class="btn btn-primary">Learn more</a>
+            <div class="card-body  d-flex flex-column">
+                <h6 class="card-title mb-4">{{meal.title}}</h6>
+                <a href="{{meal.sourceUrl}}" class="btn btn-primary mt-auto w-50">Learn more</a>
             </div>
         </div>
     </div>

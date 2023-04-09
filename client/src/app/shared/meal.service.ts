@@ -13,4 +13,8 @@ export class MealService {
   generateMealPlan(calories: number) {
     return this._http.get(this.baseUrl + '/Meal/GenerateMealPlan?targetCalories=' + calories);
   }
+
+  addMealToPlan(body: any[]) {
+    return this._http.post(this.baseUrl + '/Meal/AddMealToPlan', body);
+  }
 }
