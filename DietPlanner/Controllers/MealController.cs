@@ -21,7 +21,6 @@ namespace DietPlanner.Controllers
 
         [HttpGet]
         [Route("GenerateMealPlan")]
-        [Authorize]
         public async Task<IActionResult> GenerateMealPlan(double targetCalories)
         {
             try
@@ -52,7 +51,6 @@ namespace DietPlanner.Controllers
 
         [HttpPost]
         [Route("AddMealToPlan")]
-        [Authorize]
         public async Task<IActionResult> AddMealToPlan(List<AddMealToPlanViewModel> model)
         {
             var requset = new List<AddToMealPlanRequest>();
